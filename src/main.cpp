@@ -21,9 +21,15 @@ uint16_t buttonStates = 0;          // Bit buffer variable
 
 // Input read and check helper function
 bool checkIfCorrect(int targetDirection) {
+  Serial.println("called function checkIfCorrect");
+
   int horizontalValue = analogRead(horizontalPotPin);
   int verticalValue = analogRead(verticalPotPin);
-
+  
+  // DEBUGGING: Print potentiometer values
+  Serial.println(horizontalValue);
+  Serial.println(verticalValue);
+  
   // Check position of potentiometers
   switch (targetDirection) {
     case 0: // N
