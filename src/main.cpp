@@ -23,14 +23,14 @@ uint16_t buttonStates = 0;          // Bit buffer variable
 
 // Input read and check helper function
 bool checkIfCorrect(int targetDirection) {
-  Serial.println("called function checkIfCorrect");
+  //Serial.println("called function checkIfCorrect");
 
   int horizontalValue = analogRead(horizontalPotPin);
   int verticalValue = analogRead(verticalPotPin);
   
   // DEBUGGING: Print potentiometer values
-  Serial.println(horizontalValue);
-  Serial.println(verticalValue);
+  //Serial.println(horizontalValue);
+  //Serial.println(verticalValue);
   
   // Check position of potentiometers
   switch (targetDirection) {
@@ -48,31 +48,28 @@ bool checkIfCorrect(int targetDirection) {
 
 // Game logic helper function
 void playGame() {
-  Serial.println("called function playGame");
+  //Serial.println("called function playGame");
 
   int targetDirection = random(0, 4); // Randomly select a direction
 
   // DEBUGGING: Print randomly selected direction
-  Serial.print("LED ");
-  Serial.print(targetDirection);
-  Serial.println(" - Selected Direction");
-  for (int i = 0; i < 4; ++i) {
-    digitalWrite(ledPins[i], LOW); // Loop through array index to turn off all LEDs
-  }
+  //Serial.print("LED ");
+  //Serial.print(targetDirection);
+  //Serial.println(" - Selected Direction");
 
   // DEBUGGING: Print state of LED pins after turning all off
-  for(int i = 0; i < 4; i++) {
-  Serial.print (digitalRead (ledPins[i])) ;
-  }
-  Serial.println();
+  //for(int i = 0; i < 4; i++) {
+  //Serial.print (digitalRead (ledPins[i])) ;
+  //}
+  //Serial.println();
 
   digitalWrite(ledPins[targetDirection], HIGH); // Light up direction LED
 
   // DEBUGGING: Print state of LED pins after setting a random pin on
-  for(int i = 0; i < 4; i++) {
-  Serial.print (digitalRead (ledPins[i])) ;
-  }
-  Serial.println();
+  //for(int i = 0; i < 4; i++) {
+  //Serial.print (digitalRead (ledPins[i])) ;
+  //}
+  //Serial.println();
 
   lcd.clear();
   lcd.print("GO");
@@ -85,8 +82,8 @@ void playGame() {
       lcd.print("WIN");
 
       //DEBUGGING
-      Serial.println("Win State");
-      Serial.println();
+      //Serial.println("Win State");
+      //Serial.println();
 
       delay(2000); // Show win message for delay time
       return;
@@ -98,8 +95,8 @@ void playGame() {
   lcd.print("LOSE");
 
   // DEBUGGING
-  Serial.println("Loss State");
-  Serial.println();
+  //Serial.println("Loss State");
+  //Serial.println();
 
   delay(2000); // Show lose message for delay time
 }
@@ -111,7 +108,7 @@ void buttonScan(void)
   buttonStates <<= 1; // Bitshift u_int16 left
   buttonStates |= digitalRead(buttonPin); // Bitwise OR to append newest read to buttonStates
   sumStates = __builtin_popcount(buttonStates); // Count 1s in buttonStates
-  if(sumStates >= 15)
+  if(sumStates >= 16)
   {
     playGame();
     buttonStates = 0;
@@ -120,7 +117,7 @@ void buttonScan(void)
 
 void setup() {
   //DEBUGGING
-  Serial.begin(9600);
+  //Serial.begin(9600);
 
   // Initialize the LED pins as outputs
   for (int i = 0; i < 4; ++i) {
@@ -138,6 +135,11 @@ void setup() {
 }
 
 void loop() {
+
+  for (int i = 0; i < 4; ++i) {
+    digitalWrite(ledPins[i], LOW); // Loop through array index to turn off all LEDs
+  }
+
   // Call buttonScan function after 5ms has elapsed
   T2 = millis();
   if((T2 - T1) >= 5) {
