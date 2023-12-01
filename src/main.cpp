@@ -9,10 +9,12 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 const int horizontalPotPin = A0;    // Horizontal potentiometer
 const int verticalPotPin = A1;      // Vertical potentiometer
 const int buttonPin = 6;            // Button to start the game
-const int ledPins[] = {2, 3, 4, 5}; // LEDs N, S, W, E
+const int ledPins[] = {7, 8, 9, 10}; // LEDs N, S, W, E array
 
 // Game Parameters
-const int threshold = 512;          // Midpoint value of potentiometer
+const int midthreshold = 512;       // Midpoint value of potentiometer
+const int highthreshold = 823;      // High cutoff value for joystick 
+const int lowthreshold = 200;       // Low cutoff value for joystick
 const long reactionTime = 3000;     // Time to move "joystick"
 
 // Button debounce variables
@@ -33,13 +35,13 @@ bool checkIfCorrect(int targetDirection) {
   // Check position of potentiometers
   switch (targetDirection) {
     case 0: // N
-      return (verticalValue > threshold);
+      return (verticalValue > highthreshold);
     case 1: // S
-      return (verticalValue < threshold);
+      return (verticalValue < lowthreshold);
     case 2: // W
-      return (horizontalValue < threshold);
+      return (horizontalValue < lowthreshold);
     case 3: // E
-      return (horizontalValue > threshold);
+      return (horizontalValue > highthreshold);
   }
   return false; // No match
 }
@@ -55,7 +57,7 @@ void playGame() {
   Serial.print(targetDirection);
   Serial.println(" - Selected Direction");
   for (int i = 0; i < 4; ++i) {
-    digitalWrite(ledPins[i], LOW); // Turn off all LEDs
+    digitalWrite(ledPins[i], LOW); // Loop through array index to turn off all LEDs
   }
 
   // DEBUGGING: Print state of LED pins after turning all off
@@ -72,15 +74,15 @@ void playGame() {
   }
   Serial.println();
 
-  // lcd.clear();
-  // lcd.print("GO");
+  lcd.clear();
+  lcd.print("GO");
 
   unsigned long startTime = millis();
 
   while (millis() - startTime < reactionTime) {
     if (checkIfCorrect(targetDirection)) {
-      // lcd.clear();
-      // lcd.print("WIN");
+      lcd.clear();
+      lcd.print("WIN");
 
       //DEBUGGING
       Serial.println("Win State");
@@ -92,8 +94,8 @@ void playGame() {
   }
 
   // If the player didn't react in time
-  // lcd.clear();
-  // lcd.print("LOSE");
+  lcd.clear();
+  lcd.print("LOSE");
 
   // DEBUGGING
   Serial.println("Loss State");
@@ -109,7 +111,7 @@ void buttonScan(void)
   buttonStates <<= 1; // Bitshift u_int16 left
   buttonStates |= digitalRead(buttonPin); // Bitwise OR to append newest read to buttonStates
   sumStates = __builtin_popcount(buttonStates); // Count 1s in buttonStates
-  if(sumStates >= 16)
+  if(sumStates >= 15)
   {
     playGame();
     buttonStates = 0;
@@ -129,10 +131,10 @@ void setup() {
   pinMode(buttonPin, INPUT);
   
   // Activate "lcd" object instance
-  // lcd.begin(16, 2);
+  lcd.begin(16, 2);
   
   // Display ready message
-  // lcd.print("READY");
+  lcd.print("READY");
 }
 
 void loop() {
