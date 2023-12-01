@@ -79,7 +79,7 @@ void playGame() {
   while (millis() - startTime < reactionTime) {
     if (checkIfCorrect(targetDirection)) {
       lcd.clear();
-      lcd.print("WIN");
+      lcd.print("YOU WIN");
 
       //DEBUGGING
       //Serial.println("Win State");
@@ -92,7 +92,7 @@ void playGame() {
 
   // If the player didn't react in time
   lcd.clear();
-  lcd.print("LOSE");
+  lcd.print("YOU LOSE");
 
   // DEBUGGING
   //Serial.println("Loss State");
