@@ -48,7 +48,7 @@ bool checkIfCorrect(int targetDirection) {
 
 // Game logic helper function
 void playGame() {
-  //Serial.println("called function playGame");
+  Serial.println("called function playGame");
 
   int targetDirection = random(0, 4); // Randomly select a direction
 
@@ -86,6 +86,8 @@ void playGame() {
       //Serial.println();
 
       delay(2000); // Show win message for delay time
+      lcd.clear();
+      lcd.print("READY");
       return;
     }
   }
@@ -99,6 +101,8 @@ void playGame() {
   //Serial.println();
 
   delay(2000); // Show lose message for delay time
+  lcd.clear();
+  lcd.print("READY");
 }
 
 // Button debouncing moving average filter helper function
@@ -135,7 +139,6 @@ void setup() {
 }
 
 void loop() {
-
   for (int i = 0; i < 4; ++i) {
     digitalWrite(ledPins[i], LOW); // Loop through array index to turn off all LEDs
   }
